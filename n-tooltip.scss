@@ -94,3 +94,15 @@ html:not(.can-touch) .n-tool:hover .n-tool__tip {
 		inset-inline-end: auto;
 	}
 }
+
+// Displaced tip required relative body position, until replaced by <dialog>
+
+body:has(> .n-tool__tip) {
+	position: relative;
+}
+
+@supports not selector(a:has(a)) {
+	body {
+		position: relative;
+	}
+}
