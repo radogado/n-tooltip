@@ -47,6 +47,8 @@ html:not(.can-touch) .n-tool:hover .n-tool__tip {
 	width: 20em;
 	line-height: calc(var(--line-height-em)/1.25);
 	display: none;
+	padding: 1em;
+	box-sizing: border-box;
 
 	&[aria-expanded] {
 		display: flex;
