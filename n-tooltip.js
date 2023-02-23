@@ -1,8 +1,7 @@
 // Component Tooltip – start
 (function() {
-	let setTipPosition = (tip) => {
+	let setTipPosition = (tool, tip) => {
 		// Take up the most area available on top/right/bottom/left of the tool. Relative to body.
-		let tool = document.querySelector('[data-n-tool="' + tip.getAttribute("for") + '"]');
 		let rect = tool.getBoundingClientRect();
 		let top = rect.top;
 		let left = rect.left;
@@ -96,37 +95,35 @@
 			}
 		}
 		tip.style.setProperty("--offset_x", offset_x + "px");
+		tip.style.visibility = 'visible';
 	};
 
-	function getToolTip(e) {
-		return document.querySelector('.n-tool__tip[for="' + e.target.closest(".n-tool").dataset.nTool + '"]');
+	function getToolTip(tool) {
+		return document.getElementById(tool.getAttribute('aria-describedby')) || tool.nextElementSibling;
 	}
 	let hideTip = (e) => {
-		let tip = getToolTip(e);
-		tip.removeAttribute("aria-expanded");
+		let tool = e.target.closest(".n-tooltip");
+		let tip = getToolTip(tool);
+		tool.removeAttribute("aria-expanded");
 		tip.removeAttribute("style");
 		delete tip.dataset.position;
 	};
 	let showTip = (e) => {
-		let tip = getToolTip(e);
-		tip.setAttribute("aria-expanded", true);
-		setTipPosition(tip);
+		let tool = e.target.closest(".n-tooltip");
+		let tip = getToolTip(tool);
+		tool.setAttribute("aria-expanded", true);
+		setTipPosition(tool, tip);
 	};
-	var init = (host) => {
+	const init = (host = document) => {
 		/* Tooltip */
-		let tooltips = host.querySelectorAll(".n-tool").length;
-		host.querySelectorAll(".n-tool:not([data-ready])").forEach((el) => {
-			let tip = el.querySelector(".n-tool__tip");
-			if (!tip) return;
-			let content = tip.innerHTML;
-			tip.innerHTML = "";
-			tip.insertAdjacentHTML("afterbegin", "<span>" + content + "</span>");
-			tip.setAttribute("for", tooltips);
-			el.dataset.nTool = tooltips++;
-			document.body.appendChild(tip);
+		let tooltips = host.querySelectorAll(".n-tooltip")?.length;
+		host.querySelectorAll(".n-tooltip:not([data-ready])").forEach((el) => {
 			el.setAttribute("tabindex", 0);
-			el.ontouchend = el.onmouseover = el.onfocus = showTip;
-			el.onblur = el.onmouseout = hideTip;
+			el.addEventListener('touchend', showTip);
+			el.addEventListener('mouseover', showTip);
+			el.addEventListener('focus', showTip);
+			el.addEventListener('mouseout', hideTip);
+			el.addEventListener('blur', hideTip);
 			el.dataset.ready = true;
 		});
 	};

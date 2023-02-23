@@ -1,7 +1,6 @@
 /* niui – Tooltip */
-// @import "../../css/niui-setup";
 
-.n-tool {
+.n-tooltip {
 	cursor: help;
 	font-weight: bold;
 	position: relative;
@@ -16,49 +15,33 @@
 	}
 }
 
-.n-tool:after,
-.n-tool__tip {
+.n-tooltip:after,
+.n-tooltip__content {
 	background-color: var(--nui-control-bg, #444);
 	color: var(--nui-control-color, #ddd);
 }
 
-.n-tool__tip[aria-expanded],
-html:not(.can-touch) .n-tool:hover .n-tool__tip {
-	opacity: 1;
-	visibility: visible;
-	display: block;
-}
-
-.n-tool__tip {
+.n-tooltip__content {
 	overflow: visible;
 	max-height: calc(100vh - 40px);
+	margin-top: 1em;
 	padding: calc(var(--line-height-em)/2);
 	font-size: 0.8em;
 	font-weight: normal;
 	position: absolute;
-	top: auto;
+	inset-block-start: auto;
 	inset-inline-start: 0;
 	inset-inline-end: 0;
 	z-index: 999;
 	text-align: start;
 	visibility: hidden;
-	opacity: 0;
 	transition: opacity 0.2s ease-in-out;
 	width: 20em;
 	line-height: calc(var(--line-height-em)/1.25);
-	display: none;
 	padding: 1em;
 	box-sizing: border-box;
 
-	&[aria-expanded] {
-		display: flex;
-	}
-
-	span {
-		overflow: auto;
-	}
-
-	&:after {
+	&:after { // Arrow
 		content: "";
 		position: absolute;
 		background-color: var(--nui-control-bg, #444);
@@ -97,9 +80,9 @@ html:not(.can-touch) .n-tool:hover .n-tool__tip {
 	}
 }
 
-// Displaced tip required relative body position, until replaced by <dialog>
+// Displaced tip required relative body position
 
-body:has(> .n-tool__tip) {
+body:has(> .n-tooltip__content) {
 	position: relative;
 }
 
