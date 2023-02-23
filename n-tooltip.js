@@ -105,6 +105,7 @@
 		let tool = e.target.closest(".n-tooltip");
 		let tip = getToolTip(tool);
 		tool.removeAttribute("aria-expanded");
+		tool.after(tip);
 		tip.removeAttribute("style");
 		delete tip.dataset.position;
 	};
@@ -112,6 +113,7 @@
 		let tool = e.target.closest(".n-tooltip");
 		let tip = getToolTip(tool);
 		tool.setAttribute("aria-expanded", true);
+		document.body.appendChild(tip);
 		setTipPosition(tool, tip);
 	};
 	const init = (host = document) => {
