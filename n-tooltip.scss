@@ -2,82 +2,83 @@
 
 .n-tooltip {
 	cursor: help;
-	font-weight: bold;
-	position: relative;
 
-	&:after {
-		content: "?";
+	&__icon {
+		&:empty:after {
+			content: "?";
+		}
+
 		display: inline-block;
-		border-radius: 100%;
-		width: 1.5em;
-		text-align: center;
-		font-weight: normal;
-	}
-}
-
-.n-tooltip:after,
-.n-tooltip__content {
-	background-color: var(--nui-control-bg, #444);
-	color: var(--nui-control-color, #ddd);
-}
-
-.n-tooltip__content {
-	overflow: visible;
-	max-height: calc(100vh - 40px);
-	margin-top: 1em;
-	padding: calc(var(--line-height-em)/2);
-	font-size: 0.8em;
-	font-weight: normal;
-	position: absolute;
-	inset-block-start: auto;
-	inset-inline-start: 0;
-	inset-inline-end: 0;
-	z-index: 999;
-	text-align: start;
-	visibility: hidden;
-	transition: opacity 0.2s ease-in-out;
-	width: 20em;
-	line-height: calc(var(--line-height-em)/1.25);
-	padding: 1em;
-	box-sizing: border-box;
-
-	&:after { // Arrow
-		content: "";
-		position: absolute;
-		background-color: var(--nui-control-bg, #444);
-		transform: rotate(45deg);
-		width: 1em;
+		border-radius: 0.5em;
+		min-width: 1em;
 		height: 1em;
+		text-align: center;
+		line-height: 1;
 	}
 
-	&[data-n-position="top"],
-	&[data-n-position="bottom"] {
-		margin-inline-start: var(--offset_x, 0);
+	&__icon,
+	&__content {
+		background-color: var(--nui-control-bg, #444);
+		color: var(--nui-control-color, #ddd);
+	}
+
+	&__content {
+		overflow: visible;
+		max-height: calc(100vh - 40px);
+		padding: calc(var(--line-height-em)/2);
+		font-size: 0.8em;
+		font-weight: normal;
+		position: absolute;
+		z-index: 999;
+		text-align: start;
+		visibility: hidden;
+		transition: opacity 0.2s ease-in-out;
+		width: min(20em, 80vw);
+		line-height: calc(var(--line-height-em)/1.25);
+		padding: 1em;
+		box-sizing: border-box;
+		border-radius: var(--nui-border-radius);
 
 		&:after {
-			inset-inline-start: calc(50% - 0.5em - var(--offset_x, 0));
-			bottom: -0.45em;
+			// Arrow
+			content: "";
+			position: absolute;
+			background-color: var(--nui-control-bg, #444);
+			transform: rotate(45deg);
+			width: 1em;
+			height: 1em;
+		}
+
+		&[data-n-position="top"],
+		&[data-n-position="bottom"] {
+			margin-left: var(--offset_x, 0);
+
+			&:after {
+				left: calc(50% - 0.5em - var(--offset_x, 0));
+				bottom: -0.45em;
+			}
+		}
+
+		&[data-n-position="bottom"]:after {
+			top: -0.45em;
+		}
+
+		&[data-n-position="left"],
+		&[data-n-position="right"] {
+			margin-top: var(--offset_y, 0);
+
+			&:after {
+				top: calc(50% - 0.5em - var(--offset_y, 0));
+				left: -0.45em;
+			}
+		}
+
+		&[data-n-position="left"]:after {
+			right: -0.45em;
+			left: auto;
 		}
 	}
 
-	&[data-n-position="bottom"]:after {
-		top: -0.45em;
-	}
-
-	&[data-n-position="left"],
-	&[data-n-position="right"] {
-		margin-top: var(--offset_y, 0);
-
-		&:after {
-			top: calc(50% - 0.5em - var(--offset_y, 0));
-			inset-inline-start: -0.45em;
-		}
-	}
-
-	&[data-n-position="left"]:after {
-		inset-inline-start: -0.45em;
-		inset-inline-end: auto;
-	}
 }
 
 // Displaced tip required relative body position

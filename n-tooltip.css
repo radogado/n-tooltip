@@ -2,43 +2,38 @@
 /* niui – Tooltip */
 .n-tooltip {
   cursor: help;
-  font-weight: bold;
-  position: relative;
 }
-.n-tooltip:after {
-  content: "?";
+.n-tooltip__icon {
   display: inline-block;
-  border-radius: 100%;
-  width: 1.5em;
+  border-radius: 0.5em;
+  min-width: 1em;
+  height: 1em;
   text-align: center;
-  font-weight: normal;
+  line-height: 1;
 }
-
-.n-tooltip:after,
-.n-tooltip__content {
+.n-tooltip__icon:empty:after {
+  content: "?";
+}
+.n-tooltip__icon, .n-tooltip__content {
   background-color: var(--nui-control-bg, #444);
   color: var(--nui-control-color, #ddd);
 }
-
 .n-tooltip__content {
   overflow: visible;
   max-height: calc(100vh - 40px);
-  margin-top: 1em;
   padding: calc(var(--line-height-em) / 2);
   font-size: 0.8em;
   font-weight: normal;
   position: absolute;
-  inset-block-start: auto;
-  inset-inline-start: 0;
-  inset-inline-end: 0;
   z-index: 999;
   text-align: start;
   visibility: hidden;
   transition: opacity 0.2s ease-in-out;
-  width: 20em;
+  width: min(20em, 80vw);
   line-height: calc(var(--line-height-em) / 1.25);
   padding: 1em;
   box-sizing: border-box;
+  border-radius: var(--nui-border-radius);
 }
 .n-tooltip__content:after {
   content: "";
@@ -49,10 +44,10 @@
   height: 1em;
 }
 .n-tooltip__content[data-n-position=top], .n-tooltip__content[data-n-position=bottom] {
-  margin-inline-start: var(--offset_x, 0);
+  margin-left: var(--offset_x, 0);
 }
 .n-tooltip__content[data-n-position=top]:after, .n-tooltip__content[data-n-position=bottom]:after {
-  inset-inline-start: calc(50% - 0.5em - var(--offset_x, 0));
+  left: calc(50% - 0.5em - var(--offset_x, 0));
   bottom: -0.45em;
 }
 .n-tooltip__content[data-n-position=bottom]:after {
@@ -63,11 +58,11 @@
 }
 .n-tooltip__content[data-n-position=left]:after, .n-tooltip__content[data-n-position=right]:after {
   top: calc(50% - 0.5em - var(--offset_y, 0));
-  inset-inline-start: -0.45em;
+  left: -0.45em;
 }
 .n-tooltip__content[data-n-position=left]:after {
-  inset-inline-start: -0.45em;
-  inset-inline-end: auto;
+  right: -0.45em;
+  left: auto;
 }
 
 body:has(> .n-tooltip__content) {

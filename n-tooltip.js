@@ -90,8 +90,8 @@
 		if (rect_tip.x < 0) {
 			offset_x = Math.abs(rect_tip.x) + 10;
 		} else {
-			if (rect_tip.right > window.outerWidth) {
-				offset_x = window.outerWidth - rect_tip.right - 10;
+			if (rect_tip.right > window.innerWidth) {
+				offset_x = window.innerWidth - rect_tip.right - 10;
 			}
 		}
 		tip.style.setProperty("--offset_x", offset_x + "px");
