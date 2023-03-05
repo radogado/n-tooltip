@@ -14,6 +14,8 @@
 		let body_rect = document.body.getBoundingClientRect();
 		tip.removeAttribute("style");
 		delete tip.dataset.position;
+		tip.classList.add('n-tooltip__content-visible');
+
 		let positionTop = () => {
 			tip.style.bottom = 20 + body_rect.height + body_rect.y - top + "px";
 			tip.style.maxHeight = top - 40 + "px";
@@ -95,7 +97,6 @@
 			}
 		}
 		tip.style.setProperty("--offset_x", offset_x + "px");
-		tip.style.visibility = 'visible';
 	};
 
 	function getToolTip(tool) {
@@ -108,6 +109,7 @@
 		tool.after(tip);
 		tip.removeAttribute("style");
 		delete tip.dataset.position;
+		tip.classList.remove('n-tooltip__content-visible');
 	};
 	let showTip = (e) => {
 		let tool = e.target.closest(".n-tooltip");

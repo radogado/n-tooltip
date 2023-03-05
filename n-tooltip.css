@@ -19,7 +19,7 @@
   color: var(--nui-control-color, #ddd);
 }
 .n-tooltip__content {
-  overflow: visible;
+  overflow: hidden;
   max-height: calc(100vh - 40px);
   padding: calc(var(--line-height-em) / 2);
   font-size: 0.8em;
@@ -27,13 +27,17 @@
   position: absolute;
   z-index: 999;
   text-align: start;
-  visibility: hidden;
   transition: opacity 0.2s ease-in-out;
   width: min(20em, 80vw);
   line-height: calc(var(--line-height-em) / 1.25);
   padding: 1em;
   box-sizing: border-box;
   border-radius: var(--nui-border-radius);
+  display: none;
+}
+.n-tooltip__content-visible {
+  display: block;
+  overflow: visible;
 }
 .n-tooltip__content:after {
   content: "";
