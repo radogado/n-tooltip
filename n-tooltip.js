@@ -103,6 +103,7 @@
 		return document.getElementById(tool.getAttribute('aria-describedby')) || tool.nextElementSibling;
 	}
 	let hideTip = (e) => {
+		// return;
 		let tool = e.target.closest(".n-tooltip");
 		let tip = getToolTip(tool);
 		tool.removeAttribute("aria-expanded");
