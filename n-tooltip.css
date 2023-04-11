@@ -28,7 +28,7 @@
   z-index: 999;
   text-align: start;
   transition: opacity 0.2s ease-in-out;
-  width: min(20em, 80vw);
+  width: min(30em, 80vw);
   line-height: calc(var(--line-height-em)/1.25);
   padding: 2em;
   box-sizing: border-box;
@@ -53,6 +53,12 @@
   background: var(--nui-control-bg, #444);
   border-radius: var(--nui-border-radius);
   z-index: -1;
+}
+.n-tooltip__content:not([data-n-position=top]) {
+  -webkit-mask: linear-gradient(red, red) no-repeat;
+  -webkit-mask-size: 100% calc(100% - 1em);
+  mask: linear-gradient(red, red) no-repeat;
+  mask-size: 100% calc(100% - 1em);
 }
 .n-tooltip__content[data-n-position=top], .n-tooltip__content[data-n-position=bottom] {
   margin-left: var(--offset_x, 0);
