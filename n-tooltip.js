@@ -131,6 +131,6 @@
 			el.dataset.ready = true;
 		});
 	};
-	typeof registerComponent === "function" ? registerComponent("n-tooltip", init) : init();
+	(typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-tooltip", init) : init();
 })();
 // Component Tooltip – end
