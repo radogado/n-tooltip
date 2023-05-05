@@ -15,7 +15,6 @@
 		tip.removeAttribute("style");
 		delete tip.dataset.position;
 		tip.classList.add('n-tooltip__content-visible');
-
 		let positionTop = () => {
 			tip.style.bottom = 20 + body_rect.height + body_rect.y - top + "px";
 			tip.style.maxHeight = top - 40 + "px";
@@ -102,15 +101,20 @@
 	function getToolTip(tool) {
 		return document.getElementById(tool.getAttribute('aria-describedby')) || tool.nextElementSibling;
 	}
-	let hideTip = (e) => {
-		// return;
-		let tool = e.target.closest(".n-tooltip");
+	const hideTipFunction = tool => {
 		let tip = getToolTip(tool);
 		tool.removeAttribute("aria-expanded");
 		tool.after(tip);
 		tip.removeAttribute("style");
 		delete tip.dataset.position;
 		tip.classList.remove('n-tooltip__content-visible');
+	}
+	let hideTip = (e) => {
+		hideTipFunction(e.target.closest(".n-tooltip"));
+	};
+	const hideTipOnScroll = e => {
+		document.querySelectorAll('.n-tooltip').forEach(el => hideTipFunction(el));
+		window.removeEventListener('scroll', hideTipOnScroll);
 	};
 	let showTip = (e) => {
 		let tool = e.target.closest(".n-tooltip");
@@ -118,6 +122,7 @@
 		tool.setAttribute("aria-expanded", true);
 		document.body.appendChild(tip);
 		setTipPosition(tool, tip);
+		window.addEventListener('scroll', hideTipOnScroll, { 'passive': 'true' });
 	};
 	const init = (host = document) => {
 		/* Tooltip */
@@ -132,6 +137,6 @@
 			el.dataset.ready = true;
 		});
 	};
-	(typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-tooltip", init) : init();
+	(typeof nui !== 'undefined' && typeof nui.registerComponent === "function") ? nui.registerComponent("n-tooltip", init): init();
 })();
 // Component Tooltip – end
