@@ -114,7 +114,7 @@
 	};
 	const hideTipOnScroll = e => {
 		document.querySelectorAll('.n-tooltip').forEach(el => hideTipFunction(el));
-		window.removeEventListener('scroll', hideTipOnScroll);
+		document.removeEventListener('scroll', hideTipOnScroll);
 	};
 	let showTip = (e) => {
 		let tool = e.target.closest(".n-tooltip");
@@ -122,7 +122,7 @@
 		tool.setAttribute("aria-expanded", true);
 		document.body.appendChild(tip);
 		setTipPosition(tool, tip);
-		window.addEventListener('scroll', hideTipOnScroll, { 'passive': 'true' });
+		document.addEventListener('scroll', hideTipOnScroll, true);
 	};
 	const init = (host = document) => {
 		/* Tooltip */
