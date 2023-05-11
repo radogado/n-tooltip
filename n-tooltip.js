@@ -18,13 +18,13 @@
 		let positionTop = () => {
 			tip.style.bottom = 20 + body_rect.height + body_rect.y - top + "px";
 			tip.style.maxHeight = top - 40 + "px";
-			tip.style.left = `${rect.x + rect.width / 2 - tip.scrollWidth / 2}px`;
+			tip.style.left = `${rect.x + rect.width / 2 - tip.scrollWidth / 2 - document.body.getBoundingClientRect().x}px`;
 			tip.dataset.nPosition = "top";
 		};
 		let positionBottom = () => {
 			tip.style.top = 20 - body_rect.y + top + rect.height + "px";
 			tip.style.maxHeight = bottom - 40 + "px";
-			tip.style.left = `${rect.x + rect.width / 2 - tip.scrollWidth / 2}px`;
+			tip.style.left = `${rect.x + rect.width / 2 - tip.scrollWidth / 2 - document.body.getBoundingClientRect().x}px`;
 			tip.dataset.nPosition = "bottom";
 		};
 		let positionLeft = () => {
