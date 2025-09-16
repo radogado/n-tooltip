@@ -4,10 +4,6 @@
 	cursor: help;
 
 	&__icon {
-		&:empty:after {
-			content: "?";
-		}
-
 		display: inline-block;
 		border-radius: 0.5em;
 		min-width: 1em;
@@ -15,6 +11,10 @@
 		text-align: center;
 		line-height: 1;
 		background-color: var(--nui-control-bg, #444);
+
+		&:empty:after {
+			content: "?";
+		}
 	}
 
 	&__icon,
