@@ -1,6 +1,6 @@
 {
   "name": "n-tooltip",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Tooltip",
   "main": "n-tooltip.js",
   "style": "n-tooltip.css",
