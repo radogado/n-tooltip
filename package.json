@@ -2,10 +2,23 @@
   "name": "n-tooltip",
   "version": "1.0.12",
   "description": "Tooltip",
-  "main": "index.js",
+  "main": "n-tooltip.js",
+  "style": "n-tooltip.css",
+  "files": [
+    "n-tooltip.js",
+    "n-tooltip.css",
+    "n-tooltip.css.map",
+    "n-tooltip.scss",
+    "README.md",
+    "index.html"
+  ],
   "scripts": {
+    "build:css": "sass n-tooltip.scss n-tooltip.css --style=expanded --source-map",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Radoslav Sharapanov <spacest@gmail.com> (http://github.com/radogado)",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.97.1"
+  }
 }

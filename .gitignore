@@ -1,0 +1,17 @@
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor junk
+.DS_Store
+.idea/
+.vscode/
+
+# optional lockfiles / caches (keep if you prefer committing them)
+.npm/
+.cache/
+
