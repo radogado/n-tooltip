@@ -25,7 +25,6 @@
   &__content {
     overflow: hidden;
     max-height: calc(100vh - 40px);
-    padding: calc(var(--line-height-em) / 2);
     font-size: 0.8em;
     font-weight: normal;
     position: absolute;
@@ -36,12 +35,10 @@
     line-height: calc(var(--line-height-em) / 1.25);
     padding: 2em;
     box-sizing: border-box;
-    // border-radius: var(--nui-border-radius);
     display: none;
 
     &-visible {
       display: block;
-      // overflow: visible;
     }
 
     &:after {
@@ -83,6 +80,7 @@
 
     &[data-n-position="bottom"]:after {
       top: 0.55em;
+      bottom: auto;
     }
 
     &[data-n-position="left"],
@@ -108,14 +106,3 @@ body:has(> .n-tooltip__content) {
   position: relative;
 }
 
-// @supports not selector(a:has(a)) { // Sass error
-// 	body {
-// 		position: relative;
-// 	}
-// }
-
-@-moz-document url-prefix() {
-  body {
-    position: relative;
-  }
-}
