@@ -1,7 +1,12 @@
 /* niui – Tooltip */
+@use "../../css/niui-vars" as *;
 
 .n-tooltip {
   cursor: help;
+
+  &:focus-visible {
+    @include focus-visible-ring;
+  }
 
   &__icon {
     display: inline-block;
