@@ -1,5 +1,16 @@
 // Component Tooltip – start
 (function () {
+  const HIDE_DELAY_MS = 150;
+  let hideTipTimer = null;
+  let escapeHandler = null;
+
+  const clearHideTimer = () => {
+    if (hideTipTimer) {
+      clearTimeout(hideTipTimer);
+      hideTipTimer = null;
+    }
+  };
+
   const setTipPosition = (tool, tip) => {
     // Take up the most area available on top/right/bottom/left of the tool. Relative to body.
     const rect = tool.getBoundingClientRect();
@@ -121,9 +132,26 @@
       tool.nextElementSibling
     );
   }
+
   const scrollListenerOptions = { capture: true, passive: true };
+
+  const removeGlobalListenersIfIdle = () => {
+    if (!document.querySelector('.n-tooltip[aria-expanded="true"]')) {
+      document.removeEventListener(
+        "scroll",
+        hideTipOnScroll,
+        scrollListenerOptions
+      );
+      if (escapeHandler) {
+        document.removeEventListener("keydown", escapeHandler);
+        escapeHandler = null;
+      }
+    }
+  };
+
   const hideTipFunction = (tool) => {
     if (!tool) return;
+    clearHideTimer();
     let tip = getToolTip(tool);
     if (!tip) return;
     tool.removeAttribute("aria-expanded");
@@ -131,42 +159,92 @@
     tip.removeAttribute("style");
     delete tip.dataset.nPosition;
     tip.classList.remove("n-tooltip__content-visible");
-    // If nothing is open, we don't need the scroll listener hanging around.
-    if (!document.querySelector('.n-tooltip[aria-expanded="true"]')) {
-      document.removeEventListener(
-        "scroll",
-        hideTipOnScroll,
-        scrollListenerOptions
-      );
-    }
+    removeGlobalListenersIfIdle();
   };
+
+  const scheduleHideTip = (tool) => {
+    clearHideTimer();
+    hideTipTimer = setTimeout(() => {
+      hideTipTimer = null;
+      hideTipFunction(tool);
+    }, HIDE_DELAY_MS);
+  };
+
+  const ensureTipHoverHandlers = (tool, tip) => {
+    tip._nTooltipTrigger = tool;
+    if (tip.dataset.nTipHover) return;
+    tip.dataset.nTipHover = "true";
+    tip.dataset.ready = true;
+    tip.addEventListener("mouseenter", () => {
+      clearHideTimer();
+    });
+    tip.addEventListener("mouseleave", () => {
+      const trigger = tip._nTooltipTrigger;
+      if (trigger) scheduleHideTip(trigger);
+    });
+  };
+
+  const ensureEscapeHandler = () => {
+    if (escapeHandler) return;
+    escapeHandler = (e) => {
+      if (e.key !== "Escape") return;
+      document
+        .querySelectorAll('.n-tooltip[aria-expanded="true"]')
+        .forEach((el) => hideTipFunction(el));
+    };
+    document.addEventListener("keydown", escapeHandler);
+  };
+
   const hideTip = (e) => {
-    hideTipFunction(e.currentTarget);
+    const tool = e.currentTarget;
+    if (e.type === "mouseleave") {
+      scheduleHideTip(tool);
+      return;
+    }
+    // blur: keep open if focus moved into the tip content
+    const tip = getToolTip(tool);
+    if (tip && e.relatedTarget && tip.contains(e.relatedTarget)) {
+      return;
+    }
+    hideTipFunction(tool);
   };
-  const hideTipOnScroll = (e) => {
+
+  const hideTipOnScroll = () => {
     document
       .querySelectorAll(".n-tooltip")
       .forEach((el) => hideTipFunction(el));
-    document.removeEventListener(
-      "scroll",
-      hideTipOnScroll,
-      scrollListenerOptions
-    );
+    removeGlobalListenersIfIdle();
   };
+
   const showTip = (e) => {
     const tool = e.currentTarget;
+    clearHideTimer();
     if (tool.getAttribute("aria-expanded") === "true") return;
     const tip = getToolTip(tool);
     if (!tip) return;
+    tip.dataset.ready = true;
     tool.setAttribute("aria-expanded", true);
     document.body.appendChild(tip);
+    ensureTipHoverHandlers(tool, tip);
     setTipPosition(tool, tip);
     document.addEventListener("scroll", hideTipOnScroll, scrollListenerOptions);
+    ensureEscapeHandler();
   };
+
   const init = (host = document) => {
     /* Tooltip */
     host.querySelectorAll(".n-tooltip:not([data-ready])").forEach((el) => {
       if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", 0);
+      const tip = getToolTip(el);
+      if (tip) {
+        if (!tip.id) {
+          tip.id = "n-tooltip-" + Math.random().toString(36).slice(2, 10);
+        }
+        if (!el.hasAttribute("aria-describedby")) {
+          el.setAttribute("aria-describedby", tip.id);
+        }
+        tip.dataset.ready = true;
+      }
       el.addEventListener("touchend", showTip);
       el.addEventListener("mouseenter", showTip);
       el.addEventListener("focus", showTip);
