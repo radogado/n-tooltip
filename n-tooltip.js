@@ -182,6 +182,16 @@
       const trigger = tip._nTooltipTrigger;
       if (trigger) scheduleHideTip(trigger);
     });
+    tip.addEventListener("focusout", (e) => {
+      const trigger = tip._nTooltipTrigger;
+      if (
+        trigger &&
+        (!e.relatedTarget ||
+          (!tip.contains(e.relatedTarget) && e.relatedTarget !== trigger))
+      ) {
+        hideTipFunction(trigger);
+      }
+    });
   };
 
   const ensureEscapeHandler = () => {
@@ -219,6 +229,11 @@
   const showTip = (e) => {
     const tool = e.currentTarget;
     clearHideTimer();
+    document
+      .querySelectorAll('.n-tooltip[aria-expanded="true"]')
+      .forEach((openTool) => {
+        if (openTool !== tool) hideTipFunction(openTool);
+      });
     if (tool.getAttribute("aria-expanded") === "true") return;
     const tip = getToolTip(tool);
     if (!tip) return;
