@@ -1,7 +1,12 @@
 @charset "UTF-8";
-/* niui – Tooltip */
+/* niui – Tooltip (v4 – CSS baseline + Popover & Anchor Positioning) */
 .n-tooltip {
   cursor: help;
+  position: relative;
+}
+.n-tooltip:focus-visible:focus-visible {
+  outline: 2px solid var(--nui-control-highlight, currentColor);
+  outline-offset: 2px;
 }
 .n-tooltip__icon {
   display: inline-block;
@@ -11,84 +16,72 @@
   text-align: center;
   line-height: 1;
   background-color: var(--nui-control-bg, #444);
+  color: var(--nui-control-color, #ddd);
 }
 .n-tooltip__icon:empty:after {
   content: "?";
 }
-.n-tooltip__icon, .n-tooltip__content {
-  color: var(--nui-control-color, #ddd);
-}
 .n-tooltip__content {
-  overflow: hidden;
-  max-height: calc(100vh - 40px);
-  padding: calc(var(--line-height-em) / 2);
+  margin: 0.5em 0;
+  padding: 0.75em 1em;
+  max-width: min(30em, 80vw);
+  max-height: calc(100vh - 2.5rem);
+  overflow: auto;
   font-size: 0.8em;
   font-weight: normal;
-  position: absolute;
-  z-index: 999;
+  line-height: calc(var(--line-height-em, 1.5rem) / 1.25);
   text-align: start;
-  transition: opacity 0.2s ease-in-out;
-  width: min(30em, 80vw);
-  line-height: calc(var(--line-height-em) / 1.25);
-  padding: 2em;
+  color: var(--nui-control-color, #ddd);
+  background: var(--nui-control-bg, #444);
+  border: 0;
+  border-radius: var(--nui-border-radius);
   box-sizing: border-box;
-  display: none;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.25);
 }
-.n-tooltip__content-visible {
+.n-tooltip__content:not([popover]) {
+  display: none;
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  z-index: 999;
+}
+.n-tooltip:is(:hover, :focus-within) > .n-tooltip__content:not([popover]), .n-tooltip:is(:hover, :focus-within) + .n-tooltip__content:not([popover]) {
   display: block;
 }
-.n-tooltip__content:after {
-  content: "";
-  position: absolute;
-  background-color: var(--nui-control-bg, #444);
-  transform: rotate(45deg);
-  width: 1em;
-  height: 1em;
-}
-.n-tooltip__content:before {
-  content: "";
-  inset: 0;
-  position: absolute;
-  margin: 1em;
-  background: var(--nui-control-bg, #444);
-  border-radius: var(--nui-border-radius);
-  z-index: -1;
-}
-.n-tooltip__content:not([data-n-position=top]) {
-  -webkit-mask: linear-gradient(red, red) no-repeat;
-  -webkit-mask-size: 100% calc(100% - 1em);
-  mask: linear-gradient(red, red) no-repeat;
-  mask-size: 100% calc(100% - 1em);
-}
-.n-tooltip__content[data-n-position=top], .n-tooltip__content[data-n-position=bottom] {
-  margin-left: var(--offset_x, 0);
-}
-.n-tooltip__content[data-n-position=top]:after, .n-tooltip__content[data-n-position=bottom]:after {
-  left: calc(50% - 0.5em - var(--offset_x, 0));
-  bottom: 0.55em;
-}
-.n-tooltip__content[data-n-position=bottom]:after {
-  top: 0.55em;
-}
-.n-tooltip__content[data-n-position=left], .n-tooltip__content[data-n-position=right] {
-  margin-top: var(--offset_y, 0);
-}
-.n-tooltip__content[data-n-position=left]:after, .n-tooltip__content[data-n-position=right]:after {
-  top: calc(50% - 0.5em - var(--offset_y, 0));
-  left: 0.55em;
-}
-.n-tooltip__content[data-n-position=left]:after {
-  right: 0.55em;
-  left: auto;
-}
 
-body:has(> .n-tooltip__content) {
-  position: relative;
+@supports not selector(:popover-open) {
+  .n-tooltip__content[popover] {
+    display: none;
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    z-index: 999;
+  }
+  .n-tooltip:is(:hover, :focus-within) > .n-tooltip__content[popover],
+  .n-tooltip:is(:hover, :focus-within) + .n-tooltip__content[popover] {
+    display: block;
+  }
 }
-
-@-moz-document url-prefix() {
-  body {
-    position: relative;
+@supports (anchor-name: --a) {
+  .n-tooltip__content[popover] {
+    inset: auto;
+    position-area: block-end;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .n-tooltip__content[popover] {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, display 0.2s, overlay 0.2s;
+    transition-behavior: allow-discrete;
+  }
+  .n-tooltip__content[popover]:popover-open {
+    opacity: 1;
+  }
+  @starting-style {
+    .n-tooltip__content[popover]:popover-open {
+      opacity: 0;
+    }
   }
 }
 
