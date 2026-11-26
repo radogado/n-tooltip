@@ -1,8 +1,9 @@
-/* niui – Tooltip */
+/* niui – Tooltip (v4 – CSS baseline + Popover & Anchor Positioning) */
 @use "../../css/niui-vars" as *;
 
 .n-tooltip {
   cursor: help;
+  position: relative;
 
   &:focus-visible {
     @include focus-visible-ring;
@@ -16,98 +17,80 @@
     text-align: center;
     line-height: 1;
     background-color: var(--nui-control-bg, #444);
+    color: var(--nui-control-color, #ddd);
 
     &:empty:after {
       content: "?";
     }
   }
 
-  &__icon,
   &__content {
-    color: var(--nui-control-color, #ddd);
-  }
-
-  &__content {
-    overflow: hidden;
-    max-height: calc(100vh - 40px);
+    margin: 0.5em 0;
+    padding: 0.75em 1em;
+    max-width: min(30em, 80vw);
+    max-height: calc(100vh - 2.5rem);
+    overflow: auto;
     font-size: 0.8em;
     font-weight: normal;
-    position: absolute;
-    z-index: 999;
+    line-height: calc(var(--line-height-em, 1.5rem) / 1.25);
     text-align: start;
-    transition: opacity 0.2s ease-in-out;
-    width: min(30em, 80vw);
-    line-height: calc(var(--line-height-em) / 1.25);
-    padding: 2em;
+    color: var(--nui-control-color, #ddd);
+    background: var(--nui-control-bg, #444);
+    border: 0;
+    border-radius: var(--nui-border-radius);
     box-sizing: border-box;
-    display: none;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.25);
 
-    &-visible {
-      display: block;
-    }
-
-    &:after {
-      // Arrow
-      content: "";
+    &:not([popover]) {
+      display: none;
       position: absolute;
-      background-color: var(--nui-control-bg, #444);
-      transform: rotate(45deg);
-      width: 1em;
-      height: 1em;
+      inset-block-start: 100%;
+      inset-inline-start: 0;
+      z-index: 999;
     }
+  }
 
-    &:before {
-      content: "";
-      inset: 0;
-      position: absolute;
-      margin: 1em;
-      background: var(--nui-control-bg, #444);
-      border-radius: var(--nui-border-radius);
-      z-index: -1;
-    }
-
-    &:not([data-n-position="top"]) {
-      -webkit-mask: linear-gradient(red, red) no-repeat;
-      -webkit-mask-size: 100% calc(100% - 1em);
-      mask: linear-gradient(red, red) no-repeat;
-      mask-size: 100% calc(100% - 1em);
-    }
-
-    &[data-n-position="top"],
-    &[data-n-position="bottom"] {
-      margin-left: var(--offset_x, 0);
-
-      &:after {
-        left: calc(50% - 0.5em - var(--offset_x, 0));
-        bottom: 0.55em;
-      }
-    }
-
-    &[data-n-position="bottom"]:after {
-      top: 0.55em;
-      bottom: auto;
-    }
-
-    &[data-n-position="left"],
-    &[data-n-position="right"] {
-      margin-top: var(--offset_y, 0);
-
-      &:after {
-        top: calc(50% - 0.5em - var(--offset_y, 0));
-        left: 0.55em;
-      }
-    }
-
-    &[data-n-position="left"]:after {
-      right: 0.55em;
-      left: auto;
-    }
+  &:is(:hover, :focus-within) > .n-tooltip__content:not([popover]),
+  &:is(:hover, :focus-within) + .n-tooltip__content:not([popover]) {
+    display: block;
   }
 }
 
-// Displaced tip required relative body position
+@supports not selector(:popover-open) {
+  .n-tooltip__content[popover] {
+    display: none;
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    z-index: 999;
+  }
 
-body:has(> .n-tooltip__content) {
-  position: relative;
+  .n-tooltip:is(:hover, :focus-within) > .n-tooltip__content[popover],
+  .n-tooltip:is(:hover, :focus-within) + .n-tooltip__content[popover] {
+    display: block;
+  }
 }
 
+@supports (anchor-name: --a) {
+  .n-tooltip__content[popover] {
+    inset: auto;
+    position-area: block-end;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .n-tooltip__content[popover] {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, display 0.2s, overlay 0.2s;
+    transition-behavior: allow-discrete;
+
+    &:popover-open {
+      opacity: 1;
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+  }
+}
